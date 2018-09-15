@@ -10,10 +10,6 @@ loans$IncomeRange <- factor(loans$IncomeRange,
                             levels = c("Not displayed","Not employed","$0","$1-24,999",
                                        "$25,000-49,999","$50,000-74,999",
                                        "$75,000-99,999","$100,000+"))
-
-# Select loans starting August 2009:
-loans_on_after_Q3_2009 <- subset(loans, LoanOriginationQuarter %in% c("Q3 2009", "Q4 2009", "Q1 2010", "Q2 2010", "Q3 2010", "Q4 2010", "Q1 2011", "Q2 2011", "Q3 2011", "Q4 2011", "Q1 2012", "Q2 2012", "Q3 2012", "Q4 2012", "Q1 2013", "Q2 2013", "Q3 2013", "Q4 2013"))
-
 # Test for bad loans:
 is_bad_loan <- function(status) {
   ifelse(test = status %in% c('Chargedoff','Defaulted') |
@@ -21,6 +17,19 @@ is_bad_loan <- function(status) {
          yes = TRUE,
          no = FALSE)
 }
+
+loans$IsBadLoan <- is_bad_loan(loans$LoanStatus)
+
+
+# Select loans starting August 2009:
+loans_on_after_Q3_2009 <- subset(loans, LoanOriginationQuarter %in% c("Q3 2009", "Q4 2009", "Q1 2010", "Q2 2010", "Q3 2010", "Q4 2010", "Q1 2011", "Q2 2011", "Q3 2011", "Q4 2011", "Q1 2012", "Q2 2012", "Q3 2012", "Q4 2012", "Q1 2013", "Q2 2013", "Q3 2013", "Q4 2013"))
+
+#### EXPORT FINAL DATA FOR VIZ ####
+loans_export <- loans %>%
+  filter(!is.na(ProsperScore)) %>%
+  select(ProsperScore, BorrowerRate, IsBadLoan)
+write.csv(loans_export, 'prosper_loans_export.csv')
+####
 
 ggplot(data = loans,
        aes(x = ProsperScore)) +
