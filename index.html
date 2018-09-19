@@ -1,0 +1,159 @@
+<html>
+<head>
+  <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="css/vizstyle.css">
+</head>
+
+
+<body>
+
+  <div id="visualizationTitle" class="viz-title-container">
+    <div class="viz-title">
+      High Risks and Low Returns
+    </div>
+
+    <div class="viz-description">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </div>
+  </div>
+
+  <div id="chart1Container">
+  </div>
+
+  <div id="chart2Container">
+  </div>
+
+  <script type="text/javascript">
+
+    // Draw reference lines
+    var draw_lines_between_bars = function (chartNum, firstBar, secondBar) {
+      // Arguments should all be integers
+      // Hide gridlines but keep gridline container so we can draw reference lines
+      var chart = d3.select("#chart"+chartNum+"Container")
+      chart.select(".dimple-gridline").selectAll(".tick").html("");
+      // Get y value for bars
+      var firstBar_y = chart.select(".dimple-"+firstBar).data()[0].cy;
+      var secondBar_y = chart.select(".dimple-"+secondBar).data()[0].cy;
+      // Transform y value into pixels
+      var pos_y1 = ratePerScoreSeries.y._scale(firstBar_y);
+      var pos_y2 = ratePerScoreSeries.y._scale(secondBar_y);
+      // Draw lines
+      chart.select(".dimple-gridline").append("line")
+        .style("stroke","lightgrey").attr("x1",0).attr("x2",510)
+        .attr("y1",pos_y1).attr("y2",pos_y1).attr("stroke-dasharray", "5,5");
+      chart.select(".dimple-gridline").append("line")
+        .style("stroke","lightgrey").attr("x1",0).attr("x2",510)
+        .attr("y1",pos_y2).attr("y2",pos_y2).attr("stroke-dasharray", "5,5")
+
+      // Return y pixel values of both lines
+      return([pos_y1, pos_y2]);
+    }
+
+
+
+    function draw(data) {
+
+      // Event handler functions
+      var onMouseOver = function (e) {
+        d3.selectAll('.dimple-'+e.xValue)
+          .style('fill', '#80B1D3')
+          .style('stroke', '#80B1D3')
+      }
+      var onMouseOut = function (e) {
+        d3.selectAll('.dimple-'+e.xValue)
+          .style('fill', 'lightgrey')
+          .style('stroke', 'lightgrey')
+      }
+
+      // Set chart limits
+      var chartContainerWidth = 600;
+      var chartContainerHeight = 400;
+
+      var chartBoundsX = "10%";
+      var chartBoundsY = "10%";
+      var chartBoundsWidth = "85%";
+      var chartBoundsHeight = "75%";
+
+      // Set up first chart
+      var svg1 = dimple.newSvg("#chart1Container", chartContainerWidth, chartContainerHeight);
+      var ratePerScoreChart = new dimple.chart(svg1, data);
+      ratePerScoreChart.setBounds(chartBoundsX,
+                                  chartBoundsY,
+                                  chartBoundsWidth,
+                                  chartBoundsHeight);
+      ratePerScoreChart.defaultColors = [
+        new dimple.color("lightgrey")
+      ];
+
+      // Set up axes
+      var x1 = ratePerScoreChart.addCategoryAxis("x", "ProsperScore");
+      x1.title = "Prosper Score";
+      var y1 = ratePerScoreChart.addMeasureAxis("y", "MeanRatePerScore");
+      y1.title = "Mean Interest Rate";
+      y1.overrideMax = 0.35;
+
+      // Add data series
+      ratePerScoreSeries = ratePerScoreChart.addSeries("ProsperScore", dimple.plot.bar);
+
+      // Set event handlers
+      ratePerScoreSeries.addEventHandler("mouseover", onMouseOver);
+      ratePerScoreSeries.addEventHandler("mouseout", onMouseOut);
+
+      ratePerScoreChart.draw();
+
+      // Draw reference lines on chart 1, between values of:
+      // bars 2 and 4
+      var highRiskLinesYs = draw_lines_between_bars(1, 2, 4);
+      // bars 6 and 8
+      draw_lines_between_bars(1, 6, 8);
+
+      // Draw text within first line
+      // d3.select("chart1Container").select(".dimple-chart").append("text")
+      //   .text("Higher Risk Expected")
+      //   .attr("x", "60%")
+      //   .attr("y", (highRiskLinesYs[1] - highRiskLinesYs[0] - 16) / 2);
+
+      /****************************************************************************************/
+      // Set up second chart
+      var svg2 = dimple.newSvg("#chart2Container", chartContainerWidth, chartContainerHeight);
+      var ProportionBadPerScoreChart = new dimple.chart(svg2, data);
+      ProportionBadPerScoreChart.setBounds(chartBoundsX,
+                                           chartBoundsY,
+                                           chartBoundsWidth,
+                                           chartBoundsHeight);
+      ProportionBadPerScoreChart.defaultColors = [
+        new dimple.color("lightgrey")
+      ];
+
+      // Set up axes
+      var x2 = ProportionBadPerScoreChart.addCategoryAxis("x", "ProsperScore");
+      x2.title = "Prosper Score";
+      var y2 = ProportionBadPerScoreChart.addMeasureAxis("y", "PropBadPerScore");
+      y2.title = "Proportion of Bad Loans";
+      y2.overrideMax = 0.35;
+
+      ProportionBadPerScoreSeries = ProportionBadPerScoreChart.addSeries("ProsperScore", dimple.plot.bar);
+
+      // Set event handlers
+      ProportionBadPerScoreSeries.addEventHandler("mouseover", onMouseOver);
+      ProportionBadPerScoreSeries.addEventHandler("mouseout", onMouseOut);
+
+      ProportionBadPerScoreChart.draw();
+
+      // Draw reference lines on chart 2, between values of:
+      // bars 2 and 8
+      draw_lines_between_bars(2, 5, 8);
+
+    }
+  </script>
+
+  <script type="text/javascript">
+    // Read data using d3 and pass it to the draw function
+    d3.csv("/data/prosper_loans_export.csv", draw);
+  </script>
+
+</body>
+</html>
