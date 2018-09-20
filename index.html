@@ -29,7 +29,7 @@
   <script type="text/javascript">
 
     // Draw reference lines
-    var draw_lines_between_bars = function (chartNum, firstBar, secondBar) {
+    var drawLinesBetweenBars = function (chartNum, firstBar, secondBar) {
       // Arguments should all be integers
       // Hide gridlines but keep gridline container so we can draw reference lines
       var chart = d3.select("#chart"+chartNum+"Container")
@@ -53,20 +53,63 @@
     }
 
 
+    var drawAnnotationBetweenBars = function (chartNum, firstBar, secondBar, heightOfBar, text) {
+
+      var tickHeight = 7;
+
+      var chart = d3.select("#chart"+chartNum+"Container");
+      var annotationGroup = chart.select(".annotation-group");
+
+      // Set pixel values
+      var x1 = parseInt(chart.select(".dimple-"+firstBar).attr("x"));
+      var x2 = parseInt(chart.select(".dimple-"+secondBar).attr("x")) +
+               parseInt(chart.select(".dimple-"+secondBar).attr("width"));
+      var y = chart.select(".dimple-"+heightOfBar).attr("y") - 20;
+
+      // Draw lines
+      annotationGroup.append("line")
+        .style("stroke","black").attr("x1",x1).attr("x2",x2)
+        .attr("y1",y).attr("y2",y);
+      annotationGroup.append("line")
+        .style("stroke","black").attr("x1",x1).attr("x2",x1)
+        .attr("y1",y).attr("y2",y+tickHeight);
+      annotationGroup.append("line")
+        .style("stroke","black").attr("x1",x2).attr("x2",x2)
+        .attr("y1",y).attr("y2",y+tickHeight);
+      var halfway = (x1+x2)/2;
+      annotationGroup.append("line")
+        .style("stroke","black").attr("x1",halfway).attr("x2",halfway)
+        .attr("y1",y).attr("y2",y-tickHeight);
+
+      // Draw text
+      var txt = annotationGroup.append("text")
+        .classed("annotation", true)
+        .classed("current-annotation", true)
+        .style("font-family", "sans-serif")
+        .style("font-size", "14px")
+        .style("font-weight", "lighter")
+        .text(text);
+      var txtElem = document.getElementsByClassName("current-annotation");
+      var bbox = txtElem[0].getBBox();
+      txt.attr("x",halfway - bbox.width/2).attr("y",y - 14);
+      txt.classed("current-annotation", false)
+    }
+
+    var drawAnnotations = function () {
+
+      var annotationGroup = d3.selectAll("svg")
+        .select(".dimple-chart")
+        .append("g")
+        .attr("class", "annotation-group");
+
+      drawAnnotationBetweenBars(1, 2, 4, 2, "Higher Return");
+      drawAnnotationBetweenBars(1, 6, 8, 6, "Lower Return");
+      drawAnnotationBetweenBars(2, 2, 8, 5, "Similar Risk Level");
+    }
+
+
 
     function draw(data) {
-
-      // Event handler functions
-      var onMouseOver = function (e) {
-        d3.selectAll('.dimple-'+e.xValue)
-          .style('fill', '#80B1D3')
-          .style('stroke', '#80B1D3')
-      }
-      var onMouseOut = function (e) {
-        d3.selectAll('.dimple-'+e.xValue)
-          .style('fill', 'lightgrey')
-          .style('stroke', 'lightgrey')
-      }
 
       // Set chart limits
       var chartContainerWidth = 600;
@@ -98,23 +141,13 @@
       // Add data series
       ratePerScoreSeries = ratePerScoreChart.addSeries("ProsperScore", dimple.plot.bar);
 
-      // Set event handlers
-      ratePerScoreSeries.addEventHandler("mouseover", onMouseOver);
-      ratePerScoreSeries.addEventHandler("mouseout", onMouseOut);
-
       ratePerScoreChart.draw();
 
       // Draw reference lines on chart 1, between values of:
       // bars 2 and 4
-      var highRiskLinesYs = draw_lines_between_bars(1, 2, 4);
+      var highRiskLinesYs = drawLinesBetweenBars(1, 2, 4);
       // bars 6 and 8
-      draw_lines_between_bars(1, 6, 8);
-
-      // Draw text within first line
-      // d3.select("chart1Container").select(".dimple-chart").append("text")
-      //   .text("Higher Risk Expected")
-      //   .attr("x", "60%")
-      //   .attr("y", (highRiskLinesYs[1] - highRiskLinesYs[0] - 16) / 2);
+      drawLinesBetweenBars(1, 6, 8);
 
       /****************************************************************************************/
       // Set up second chart
@@ -137,16 +170,15 @@
 
       ProportionBadPerScoreSeries = ProportionBadPerScoreChart.addSeries("ProsperScore", dimple.plot.bar);
 
-      // Set event handlers
-      ProportionBadPerScoreSeries.addEventHandler("mouseover", onMouseOver);
-      ProportionBadPerScoreSeries.addEventHandler("mouseout", onMouseOut);
-
       ProportionBadPerScoreChart.draw();
 
       // Draw reference lines on chart 2, between values of:
       // bars 2 and 8
-      draw_lines_between_bars(2, 5, 8);
+      drawLinesBetweenBars(2, 5, 8);
 
+
+      // Draw annotations on both charts
+      drawAnnotations();
     }
   </script>
 
