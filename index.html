@@ -107,6 +107,19 @@
 
     function draw(data) {
 
+      // Event handler functions
+      var onMouseOver = function (e) {
+        d3.selectAll('.dimple-'+e.xValue)
+          .style('fill', '#80B1D3')
+          .style('stroke', '#80B1D3')
+      }
+      var onMouseOut = function (e) {
+        d3.selectAll('.dimple-'+e.xValue)
+          .style('fill', 'lightgrey')
+          .style('stroke', 'lightgrey')
+      }
+
+
       // Set chart limits
       var chartContainerWidth = 600;
       var chartContainerHeight = 400;
@@ -137,6 +150,10 @@
       // Add data series
       ratePerScoreSeries = ratePerScoreChart.addSeries("ProsperScore", dimple.plot.bar);
 
+      // Set event handlers
+      ratePerScoreSeries.addEventHandler("mouseover", onMouseOver);
+      ratePerScoreSeries.addEventHandler("mouseout", onMouseOut);
+
       ratePerScoreChart.draw();
 
 
@@ -160,6 +177,10 @@
       y2.overrideMax = 0.35;
 
       ProportionBadPerScoreSeries = ProportionBadPerScoreChart.addSeries("ProsperScore", dimple.plot.bar);
+
+      // Set event handlers
+      ProportionBadPerScoreSeries.addEventHandler("mouseover", onMouseOver);
+      ProportionBadPerScoreSeries.addEventHandler("mouseout", onMouseOut);
 
       ProportionBadPerScoreChart.draw();
 
