@@ -139,11 +139,6 @@
 
       ratePerScoreChart.draw();
 
-      // Draw reference lines on chart 1, between values of:
-      // bars 2 and 4
-      drawLinesBetweenBars(1, 2, 4);
-      // bars 6 and 8
-      drawLinesBetweenBars(1, 6, 8);
 
       /****************************************************************************************/
       // Set up second chart
@@ -168,13 +163,12 @@
 
       ProportionBadPerScoreChart.draw();
 
-      // Draw reference lines on chart 2, between values of:
-      // bars 2 and 8
-      drawLinesBetweenBars(2, 5, 8);
-
 
       // Draw annotations on both charts
       drawAnnotations();
+
+      // Hide all gridlines
+      d3.selectAll(".dimple-gridline").selectAll(".tick").html("");
     }
   </script>
 
