@@ -31,7 +31,9 @@ Since both charts share the same variable (*Prosper Score*) on the x axis, I opt
 
 ## Feedback
 
-Feedback not yet obtained.
+**Feedback #1:**
+
+- Visualization summary was confusing — rewrite.
 
 ## Resources
 
