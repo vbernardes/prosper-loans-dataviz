@@ -96,32 +96,27 @@
 
     var drawAnnotations = function () {
 
-      var annotationGroup = d3.selectAll("svg")
+      d3.selectAll("svg")
         .select(".dimple-chart")
         .append("g")
         .attr("class", "annotation-group");
 
-      drawAnnotationBetweenBars(1, 2, 4, 2, "Higher Return");
-      drawAnnotationBetweenBars(1, 6, 8, 6, "Lower Return");
-      drawAnnotationBetweenBars(2, 2, 8, 5, "Similar Risk Level");
+      drawAnnotationBetweenBars(1, 3, 3, 3, "Higher Return");
+      drawAnnotationBetweenBars(1, 7, 7, 7, "Lower Return");
+      drawAnnotationBetweenBars(2, 3, 7, 5, "Similar Risk");
     }
 
 
+    var highlightBar = function (chartNum, barNum) {
+
+      d3.select("#chart"+chartNum+"Container")
+        .select(".dimple-"+barNum)
+        .style("fill", "#80B1D3")
+        .style("stroke", "#80B1D3");
+    }
+
 
     function draw(data) {
-
-      // Event handler functions
-      var onMouseOver = function (e) {
-        d3.selectAll('.dimple-'+e.xValue)
-          .style('fill', '#80B1D3')
-          .style('stroke', '#80B1D3')
-      }
-      var onMouseOut = function (e) {
-        d3.selectAll('.dimple-'+e.xValue)
-          .style('fill', 'lightgrey')
-          .style('stroke', 'lightgrey')
-      }
-
 
       // Set chart limits
       var chartContainerWidth = 600;
@@ -153,9 +148,13 @@
       // Add data series
       ratePerScoreSeries = ratePerScoreChart.addSeries("ProsperScore", dimple.plot.bar);
 
-      // Set event handlers
-      ratePerScoreSeries.addEventHandler("mouseover", onMouseOver);
-      ratePerScoreSeries.addEventHandler("mouseout", onMouseOut);
+      // Set tooltip
+      ratePerScoreSeries.getTooltipText = function (e) {
+        return [
+            "Prosper Score: "+e.x,
+            "Interest Rate: "+e.y.toFixed(2)
+          ];
+      };
 
       ratePerScoreChart.draw();
 
@@ -181,15 +180,23 @@
 
       ProportionBadPerScoreSeries = ProportionBadPerScoreChart.addSeries("ProsperScore", dimple.plot.bar);
 
-      // Set event handlers
-      ProportionBadPerScoreSeries.addEventHandler("mouseover", onMouseOver);
-      ProportionBadPerScoreSeries.addEventHandler("mouseout", onMouseOut);
+      // Set tooltip
+      ProportionBadPerScoreSeries.getTooltipText = function (e) {
+        return [
+            "Prosper Score: "+e.x,
+            "Proportion of Bad Loans: "+e.y.toFixed(2)
+          ];
+      };
 
       ProportionBadPerScoreChart.draw();
 
-
-      // Draw annotations on both charts
+      /****************************************************************************************/
+      // Draw annotations and highlight select bars on both charts
       drawAnnotations();
+      highlightBar(1, 3);
+      highlightBar(1, 7);
+      highlightBar(2, 3);
+      highlightBar(2, 7);
 
       // Hide all gridlines
       d3.selectAll(".dimple-gridline").selectAll(".tick").html("");

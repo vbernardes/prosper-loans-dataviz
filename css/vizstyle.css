@@ -22,3 +22,8 @@
 	font-family:	sans-serif;
 	font-weight:	lighter;
 }
+
+svg > g:last-of-type > line {
+	stroke:  #80B1D3 !important;
+	opacity: 0.55 !important;
+}

@@ -158,3 +158,5 @@ https://prosper.zendesk.com/hc/en-us/articles/208500546-What-is-a-charge-off-
 https://prosper.zendesk.com/hc/en-us/search?utf8=✓&query=past+due
 https://prosper.zendesk.com/hc/en-us/articles/210013713-What-does-it-mean-for-a-loan-to-be-charged-off-
 https://en.wikipedia.org/wiki/Subprime_mortgage_crisis
+http://dataremixed.com/2013/05/connected-scatterplots-and-strikeout/
+https://stackoverflow.com/questions/28354343/changing-the-color-of-dimple-js-tooltip-helper-lines
