@@ -160,3 +160,6 @@ https://prosper.zendesk.com/hc/en-us/articles/210013713-What-does-it-mean-for-a-
 https://en.wikipedia.org/wiki/Subprime_mortgage_crisis
 http://dataremixed.com/2013/05/connected-scatterplots-and-strikeout/
 https://stackoverflow.com/questions/28354343/changing-the-color-of-dimple-js-tooltip-helper-lines
+https://stackoverflow.com/questions/27336550/show-labels-inside-each-bubble-in-dimplejs-bubble-chart
+http://dimplejs.org/examples_viewer.html?id=lines_dual_measure
+https://vanseodesign.com/web-design/svg-markers/

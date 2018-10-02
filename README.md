@@ -35,15 +35,37 @@ Since both charts share the same variable (*Prosper Score*) on the x axis, I opt
 
 Also, for clarity, I opted to remove gridlines.
 
+### Final version
+
+#### Chart type
+
+After receiving feedback, I decided to condense both charts into one, so the reader would not have to jump between charts. I created a connected scatter plot for the final version.
+
+#### Visual encodings
+
+In order to keep the visualization as simple as possible — for better readability — I chose not to use colors for this version. 
+
+Each Prosper Score was displayed as a fixed-size bubble (size is not being used as an encoding here), with lines connecting adjacent scores, so the reader can follow the changes between *interest rates* and *proportion of bad loans* for each score.
+
+Annotations were essential in this chart in helping convey the intended message, by drawing the reader’s attention to the relevant areas and showing key takeaways.
+
 ## Feedback
 
-**Feedback #1:**
+#### Feedback #1:
 
-- The charts were considered to convey their message well. However, the visualization summary was deemed confusing, and could use a rewrite for clarity.
+The charts were considered to convey their message well. However, the visualization summary was deemed confusing, and could use a rewrite for clarity.
 
-**Feedback #2:**
+#### Feedback #2:
 
-- The mouse-over coloring feature was not considered to add much value to the visualization, so it was suggested that the chart instead contain fixed colors on some bars in order to highlight the intended message.
+The mouse-over coloring feature was not considered to add much value to the visualization, so it was suggested that the chart instead contain fixed colors on some bars in order to highlight the intended message.
+
+#### Feedback #3:
+
+It was suggested that I try to condense both charts into one, so as not to have the reader jump between charts. A connected scatter plot looks like a good candidate for this.
+
+The original feedback comment can be found [here](https://www.reddit.com/r/visualization/comments/9jen9a/seeking_feedback_on_my_first_basic_visualization/).
+
+
 
 ## Resources
 

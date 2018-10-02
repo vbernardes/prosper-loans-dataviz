@@ -1,6 +1,6 @@
 .viz-title-container {
     width:		550px;
-    height:		195px;
+    height:		215px;
     padding:	3%;
 }
 
@@ -23,7 +23,10 @@
 	font-weight:	lighter;
 }
 
-svg > g:last-of-type > line {
-	stroke:  #80B1D3 !important;
-	opacity: 0.55 !important;
+.bubble-label {
+	text-anchor:	middle;
+    font-size:		12px;
+    font-family:	sans-serif;
+	/*font-weight:	lighter;*/
+    opacity:		0.9;
 }

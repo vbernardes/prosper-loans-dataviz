@@ -1,0 +1,5 @@
+“Your design choices are very good. I like the simple style and meaningful annotations.
+You might explore condensing two charts into one. For example, a connected scatter plot, with the right labels and annotations, might communicate the same idea without making the reader jump between two different charts.
+It might work, but it might not. Just something that came to mind.”
+
+https://www.reddit.com/r/visualization/comments/9jen9a/seeking_feedback_on_my_first_basic_visualization/

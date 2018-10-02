@@ -1,7 +1,6 @@
 <html>
 <meta charset="UTF-8">
 <head>
-  <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="http://dimplejs.org/dist/dimple.v2.3.0.min.js"></script>
 
@@ -19,100 +18,120 @@
     <div class="viz-description">
       <p>Prosper is a P2P lending platform that allows investors to choose among personal loans to invest in. They do that by considering a number of factors, which include a custom calculated <span style="font-weight: normal">Prosper Score</span> that represents the risk for each loan. The higher the score, the lower the risk, and the lower the interest rates paid by the borrower to the investors.</p>
 
-      <p>However, on average, loans with a Prosper Score of 2-4 (<i>higher risk expected</i>) had similar proportions of bad loans (defaulted loans, charged off loans or loans past due) as loans with a score of 6-8 (<i>lower risk expected</i>). In other words, investors who invested in loans with a score of 6-8 expected <i>lower risk</i> loans — and received <i>lower rates</i> in return — but ended up with risky loans just the same.</p>
+      <p>However, on average, loans with a Prosper Score of 2-4 <i>(higher risk expected)</i> had similar proportions of bad loans (defaulted loans, charged off loans or loans past due) as loans with a score of 6-8 <i>(lower risk expected)</i>. In other words, investors who invested in loans with a score of 6-8 expected <i>lower risk</i> loans — and received <i>lower rates</i> in return — but ended up with risky loans just the same.</p>
+
+      <p><i>NOTE: Each point in the chart below represents one Prosper Score value, ranging from 1 to 11.</i></p>
     </div>
   </div>
 
-  <div id="chart1Container">
-  </div>
-
-  <div id="chart2Container">
+  <div id="chartContainer">
   </div>
 
   <script type="text/javascript">
 
-    // Draw reference lines
-    var drawLinesBetweenBars = function (chartNum, firstBar, secondBar) {
-      // Arguments should all be integers
-      // Hide gridlines but keep gridline container so we can draw reference lines
-      var chart = d3.select("#chart"+chartNum+"Container")
-      chart.select(".dimple-gridline").selectAll(".tick").html("");
+    var makeAnnotationBox = function (text) {
 
-      // Get y pixels for bars
-      var firstBar_y = parseInt(chart.select(".dimple-"+firstBar).attr("y"));
-      var secondBar_y = parseInt(chart.select(".dimple-"+secondBar).attr("y"));
+      var margin = 10;
 
-      // Draw lines
-      chart.select(".dimple-gridline").append("line")
-        .style("stroke","lightgrey").attr("x1",0).attr("x2",510)
-        .attr("y1",firstBar_y).attr("y2",firstBar_y).attr("stroke-dasharray", "5,5");
-      chart.select(".dimple-gridline").append("line")
-        .style("stroke","lightgrey").attr("x1",0).attr("x2",510)
-        .attr("y1",secondBar_y).attr("y2",secondBar_y).attr("stroke-dasharray", "5,5");
-    }
+      var annotationGroup = d3.select(".annotation-group");
 
+      // Left side at circle 8
+      var circle8 = d3.select("circle.dimple-8");
+      var x = parseInt(circle8.attr("cx") - circle8.attr("r") - margin);
+      // Top at circle 2
+      var circle2 = d3.select("circle.dimple-2");
+      var y = parseInt(circle2.attr("cy") - circle2.attr("r") - margin);
+      // Right side at circle 5
+      var circle5 = d3.select("circle.dimple-5");
+      var width = parseInt(circle5.attr("cx")) + parseInt(circle5.attr("r")) + margin - x;
 
-    var drawAnnotationBetweenBars = function (chartNum, firstBar, secondBar, heightOfBar, text) {
+      var height = parseInt(circle8.attr("cy")) + parseInt(circle8.attr("r")) + margin - y;
 
-      var tickHeight = 7;
-
-      var chart = d3.select("#chart"+chartNum+"Container");
-      var annotationGroup = chart.select(".annotation-group");
-
-      // Set pixel values
-      var x1 = parseInt(chart.select(".dimple-"+firstBar).attr("x"));
-      var x2 = parseInt(chart.select(".dimple-"+secondBar).attr("x")) +
-               parseInt(chart.select(".dimple-"+secondBar).attr("width"));
-      var y = chart.select(".dimple-"+heightOfBar).attr("y") - 20;
-
-      // Draw lines
-      annotationGroup.append("line")
-        .style("stroke","black").attr("x1",x1).attr("x2",x2)
-        .attr("y1",y).attr("y2",y);
-      annotationGroup.append("line")
-        .style("stroke","black").attr("x1",x1).attr("x2",x1)
-        .attr("y1",y).attr("y2",y+tickHeight);
-      annotationGroup.append("line")
-        .style("stroke","black").attr("x1",x2).attr("x2",x2)
-        .attr("y1",y).attr("y2",y+tickHeight);
-      var halfway = (x1+x2)/2;
-      annotationGroup.append("line")
-        .style("stroke","black").attr("x1",halfway).attr("x2",halfway)
-        .attr("y1",y).attr("y2",y-tickHeight);
+      var box = annotationGroup.append("rect")
+        .attr("class", "annotation-box")
+        .attr("x",x).attr("y",y)
+        .attr("width",width).attr("height",height)
+        .attr("stroke-dasharray", "5,5")
+        .style("fill","transparent")
+        .style("stroke","lightgrey").style("stroke-width","2")
+        .style("fill-opacity","0.1").style("stroke-opacity","0.9");
 
       // Draw text
       var txt = annotationGroup.append("text")
         .classed("annotation", true)
         .classed("current-annotation", true)
         .style("font-family", "sans-serif")
-        .style("font-size", "14px")
+        .style("font-size", "13px")
         .style("font-weight", "lighter")
+        .style("fill", "grey")
         .text(text);
       var txtElem = document.getElementsByClassName("current-annotation");
       var bbox = txtElem[0].getBBox();
-      txt.attr("x",halfway - bbox.width/2).attr("y",y - 14);
-      txt.classed("current-annotation", false)
+      var halfway = x + width/2;
+      txt.attr("x",halfway - bbox.width/2).attr("y",y - margin);
+      txt.classed("current-annotation", false);
+    }
+
+    var makeAnnotationArrow = function (text) {
+
+      var margin = 10;
+
+      var annotationGroup = d3.select(".annotation-group");
+
+      var box = d3.select(".annotation-box");
+
+      var x = parseInt(box.attr("x")) + parseInt(box.attr("width")) + margin*1.5;
+      var y1 = parseInt(box.attr("y"));
+      var y2 = parseInt(box.attr("y")) + parseInt(box.attr("height"));
+
+      // Make arrow
+      annotationGroup.append("svg:defs").append("svg:marker")
+        .attr("id", "arrow")
+        .attr("refX", 2)
+        .attr("refY", 2)
+        .attr("markerWidth", 6)
+        .attr("markerHeight", 6)
+        .attr("orient", "auto")
+        .append("path")
+        .attr("d", "M0 0 L0 4 L4 2 Z")
+        .style("fill", "lightgrey");
+
+      // Draw line
+      annotationGroup.append("line")
+        .attr("x1", x)
+        .attr("x2", x)
+        .attr("y1", y1)
+        .attr("y2", y2 - 4)  // stop the line a little short so as not to show after arrow
+        .style("stroke", "lightgrey")
+        .style("stroke-width", "2")
+        .attr("marker-end", "url(#arrow)");
+
+      // Draw text
+      var txt = annotationGroup.append("text")
+        .classed("annotation", true)
+        .classed("current-annotation", true)
+        .style("font-family", "sans-serif")
+        .style("font-size", "13px")
+        .style("font-weight", "lighter")
+        .style("fill", "grey")
+        .text(text);
+      var txtElem = document.getElementsByClassName("current-annotation");
+      var bbox = txtElem[0].getBBox();
+      var halfway = (y1 + y2)/2;
+      txt.attr("x",x + margin/2).attr("y",halfway);
+      txt.classed("current-annotation", false);
     }
 
     var drawAnnotations = function () {
 
       d3.selectAll("svg")
         .select(".dimple-chart")
-        .append("g")
+        .insert("g", ":first-child")    // putting it first so as not
+                                        // to get in way of tooltips
         .attr("class", "annotation-group");
 
-      drawAnnotationBetweenBars(1, 3, 3, 3, "Higher Return");
-      drawAnnotationBetweenBars(1, 7, 7, 7, "Lower Return");
-      drawAnnotationBetweenBars(2, 3, 7, 5, "Similar Risk");
-    }
-
-
-    var highlightBar = function (chartNum, barNum) {
-
-      d3.select("#chart"+chartNum+"Container")
-        .select(".dimple-"+barNum)
-        .style("fill", "#80B1D3")
-        .style("stroke", "#80B1D3");
+      makeAnnotationBox("Similar Risk");
+      makeAnnotationArrow("Descending Reward");
     }
 
 
@@ -120,83 +139,64 @@
 
       // Set chart limits
       var chartContainerWidth = 600;
-      var chartContainerHeight = 400;
+      var chartContainerHeight = 600;
 
       var chartBoundsX = "10%";
       var chartBoundsY = "10%";
       var chartBoundsWidth = "85%";
       var chartBoundsHeight = "75%";
 
-      // Set up first chart
-      var svg1 = dimple.newSvg("#chart1Container", chartContainerWidth, chartContainerHeight);
-      var ratePerScoreChart = new dimple.chart(svg1, data);
-      ratePerScoreChart.setBounds(chartBoundsX,
-                                  chartBoundsY,
-                                  chartBoundsWidth,
-                                  chartBoundsHeight);
-      ratePerScoreChart.defaultColors = [
+      // Set up chart
+      var svg = dimple.newSvg("#chartContainer", chartContainerWidth, chartContainerHeight);
+      var chart = new dimple.chart(svg, data);
+      chart.setBounds(chartBoundsX,
+                      chartBoundsY,
+                      chartBoundsWidth,
+                      chartBoundsHeight);
+      chart.defaultColors = [
         new dimple.color("lightgrey")
       ];
 
       // Set up axes
-      var x1 = ratePerScoreChart.addCategoryAxis("x", "ProsperScore");
-      x1.title = "Prosper Score";
-      var y1 = ratePerScoreChart.addMeasureAxis("y", "MeanRatePerScore");
-      y1.title = "Mean Interest Rate";
-      y1.overrideMax = 0.35;
+      var x = chart.addMeasureAxis("x", "PropBadPerScore");
+      x.title = "Proportion of Bad Loans";
+      x.overrideMax = 0.35;
+      var y = chart.addMeasureAxis("y", "MeanRatePerScore");
+      y.title = "Mean Interest Rate";
+      y.overrideMax = 0.35;
 
       // Add data series
-      ratePerScoreSeries = ratePerScoreChart.addSeries("ProsperScore", dimple.plot.bar);
+      series = chart.addSeries("ProsperScore", dimple.plot.bubble);
+      lineSeries = chart.addSeries("ProsperScore", dimple.plot.line);
+      lineSeries.addOrderRule("ProsperScore");
+
+
+      series.afterDraw = function (shape, data) {
+
+        var shape = d3.select(shape);
+
+        // Set circle size and color
+        shape.attr("r", 9).style("fill", "#B1B1B1");
+
+        // Set bubble labels (Prosper Score)
+        svg.append("text")
+            .attr("x", parseFloat(shape.attr("cx")))
+            .attr("y", parseFloat(shape.attr("cy")) + 4)
+            .attr("class", "bubble-label")
+            .text(data.aggField[0]);
+      };
 
       // Set tooltip
-      ratePerScoreSeries.getTooltipText = function (e) {
+      series.getTooltipText = function (e) {
         return [
-            "Prosper Score: "+e.x,
-            "Mean Interest Rate: "+e.y.toFixed(2)
+            "Proportion of Bad Loans: "+e.xValue.toFixed(2),
+            "Mean Interest Rate: "+e.yValue.toFixed(2)
           ];
       };
 
-      ratePerScoreChart.draw();
+      chart.draw();
 
-
-      /****************************************************************************************/
-      // Set up second chart
-      var svg2 = dimple.newSvg("#chart2Container", chartContainerWidth, chartContainerHeight);
-      var ProportionBadPerScoreChart = new dimple.chart(svg2, data);
-      ProportionBadPerScoreChart.setBounds(chartBoundsX,
-                                           chartBoundsY,
-                                           chartBoundsWidth,
-                                           chartBoundsHeight);
-      ProportionBadPerScoreChart.defaultColors = [
-        new dimple.color("lightgrey")
-      ];
-
-      // Set up axes
-      var x2 = ProportionBadPerScoreChart.addCategoryAxis("x", "ProsperScore");
-      x2.title = "Prosper Score";
-      var y2 = ProportionBadPerScoreChart.addMeasureAxis("y", "PropBadPerScore");
-      y2.title = "Proportion of Bad Loans";
-      y2.overrideMax = 0.35;
-
-      ProportionBadPerScoreSeries = ProportionBadPerScoreChart.addSeries("ProsperScore", dimple.plot.bar);
-
-      // Set tooltip
-      ProportionBadPerScoreSeries.getTooltipText = function (e) {
-        return [
-            "Prosper Score: "+e.x,
-            "Proportion of Bad Loans: "+e.y.toFixed(2)
-          ];
-      };
-
-      ProportionBadPerScoreChart.draw();
-
-      /****************************************************************************************/
-      // Draw annotations and highlight select bars on both charts
       drawAnnotations();
-      highlightBar(1, 3);
-      highlightBar(1, 7);
-      highlightBar(2, 3);
-      highlightBar(2, 7);
 
       // Hide all gridlines
       d3.selectAll(".dimple-gridline").selectAll(".tick").html("");
