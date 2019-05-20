@@ -2,6 +2,8 @@
 
 Data Visualization project for Udacity Data Analyst course.
 
+![Final Plot Sample](img/FinalPlotSample.png)
+
 If you want to jump straight to the results, please [click here](http://bl.ocks.org/vbernardes/9493fd7ae396cd9e59223029771aa216) for the final plot. Previous iterations can be found [here](http://bl.ocks.org/vbernardes/c7fa975fd61400bbbc8cadbd01e1f340) and [here](http://bl.ocks.org/vbernardes/896d0879221501c9123dde33f30da12e).
 
 ## Summary
