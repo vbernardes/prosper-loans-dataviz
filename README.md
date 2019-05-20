@@ -1,6 +1,6 @@
 # udacity-dataviz-proj
 
-Data Visualization project for Udacity Data Analyst course.
+Data Visualization project for Udacity Data Analyst course. Below is an excerpt from the [final plot](http://bl.ocks.org/vbernardes/9493fd7ae396cd9e59223029771aa216):
 
 ![Final Plot Sample](img/FinalPlotSample.png)
 
