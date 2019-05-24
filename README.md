@@ -1,6 +1,8 @@
 # Prosper Loan Data — Data Visualization Project
 
-Data Visualization project for Udacity Data Analyst course. Below is an excerpt from the [final plot](http://bl.ocks.org/vbernardes/9493fd7ae396cd9e59223029771aa216):
+For this project, I analyzed a data set containing information about [Prosper](https://www.prosper.com) loans in search of impactful insights that could lead to an engaging visualization. After the analysis, one important insight was uncovered: The Prosper ranking mislabeled some high-risk loans as low-risk, potentially misleading investors.
+
+This data visualization project was completed during my Udacity Data Analyst course. Below is an excerpt from the [final plot](http://bl.ocks.org/vbernardes/9493fd7ae396cd9e59223029771aa216):
 
 ![Final Plot Sample](img/FinalPlotSample.png)
 
@@ -28,7 +30,7 @@ This visualization displays two basic bar charts. Since it is a chart type most 
 
 Bars were colored in light grey, allowing the use of color when needed to highlight certain aspects of the charts (see below).
 
-Initially I had a few ideas on how to draw the reader’s attention to the bars I wanted to highlight. Those bars were crucial to helping them understand the message I was trying to convey with the visualization. These ideas included horizontal reference lines, coloring the bars, and adding annotations.  
+Initially I had a few ideas on how to draw the reader’s attention to the bars I wanted to highlight. Those bars were crucial to helping them understand the message I was trying to convey with the visualization. These ideas included horizontal reference lines, coloring the bars, and adding annotations.
 
 For the first version of the visualization, I opted to use both annotations and to simultaneously color bars on both charts on mouse-over, to help the reader compare the interest rate and proportion of bad loans for a given Prosper Score.
 
@@ -48,7 +50,7 @@ After receiving feedback, I decided to condense both charts into one, so the rea
 
 #### Visual encodings
 
-In order to keep the visualization as simple as possible — for better readability — I chose not to use colors for this version. 
+In order to keep the visualization as simple as possible — for better readability — I chose not to use colors for this version.
 
 Each Prosper Score was displayed as a fixed-size bubble (size is not being used as an encoding here), with lines connecting adjacent scores, so the reader can follow the changes between *interest rates* and *proportion of bad loans* for each score.
 
